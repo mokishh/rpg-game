@@ -1,19 +1,20 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
-void battle(int *playerHealth) {
+void battle(int *playerHealth, int *playerMana) {
     int enemyLevel = rand() % 10 + 1;
     int enemyHealth = enemyLevel * 10;
+    int damage;
 
+    printf("\033[2J\033[H");
     printf("You are in battle!\n");
 
     while (enemyHealth > 0) {
         printf("\n--------------------------------------------------------------\n");
         printf("The enemy is level %d\n", enemyLevel);
         printf("The enemy has %d health\n", enemyHealth);
-        printf("Type 1 to attack, 2 to defend: ");
+        printf("Type 1 to attack, 2 to defend, 3 to super attack: ");
 
         int choice;
         int enemyChoice = rand() % 2 + 1;
@@ -24,13 +25,22 @@ void battle(int *playerHealth) {
             if (enemyChoice == 2) {
                 printf("The enemy defended!\n");
             } else {
-                int damage = rand() % 10 + 1;
+                damage = rand() % 10 + 1;
                 printf("You dealt %d damage!\n", damage);
                 enemyHealth -= damage;
             }
         } else if (choice != 2) {
             printf("Invalid choice!\n");
             continue;
+        } else if (choice == 3) {
+            if (playerMana != 50) {
+                printf("You don't have enough mana!\n");
+                continue;
+            }
+            damage = rand() % 30 + 10;
+            printf("You dealt %d damage!\n", damage);
+            enemyHealth -= damage;
+            playerMana -= 50;
         }
 
         if (enemyHealth <= 0) {
@@ -42,10 +52,87 @@ void battle(int *playerHealth) {
         printf("Enemy turn\n");
 
         if (enemyChoice == 1) {
-            int damage = rand() % 10 + 1;
-
-            if (choice == 2) {
-                damage /= 2;
+            switch (enemyLevel) {
+                case 1:
+                    damage = rand() % 5 + 1;
+                    if (choice == 2) {
+                        damage /= 2;
+                    }
+                    printf("The enemy dealt %d damage!\n", damage);
+                    playerHealth -= damage;
+                    break;
+                case 2:
+                    damage = rand() % 10 + 5;
+                    if (choice == 2) {
+                        damage /= 2;
+                    }
+                    printf("The enemy dealt %d damage!\n", damage);
+                    playerHealth -= damage;
+                    break;
+                case 3:
+                    damage = rand() % 20 + 10;
+                    if (choice == 2) {
+                        damage /= 2;
+                    }
+                    printf("The enemy dealt %d damage!\n", damage);
+                    playerHealth -= damage;
+                    break;
+                case 4:
+                    damage = rand() % 30 + 15;
+                    if (choice == 2) {
+                        damage /= 2;
+                    }
+                    printf("The enemy dealt %d damage!\n", damage);
+                    playerHealth -= damage;
+                    break;
+                case 5:
+                    damage = rand() % 35 + 20;
+                    if (choice == 2) {
+                        damage /= 2;
+                    }
+                    printf("The enemy dealt %d damage!\n", damage);
+                    playerHealth -= damage;
+                    break;
+                case 6:
+                    damage = rand() % 40 + 25;
+                    if (choice == 2) {
+                        damage /= 2;
+                    }
+                    printf("The enemy dealt %d damage!\n", damage);
+                    playerHealth -= damage;
+                    break;
+                case 7:
+                    damage = rand() % 45 + 30;
+                    if (choice == 2) {
+                        damage /= 2;
+                    }
+                    printf("The enemy dealt %d damage!\n", damage);
+                    playerHealth -= damage;
+                    break;
+                case 8:
+                    damage = rand() % 50 + 30;
+                    if (choice == 2) {
+                        damage /= 2;
+                    }
+                    printf("The enemy dealt %d damage!\n", damage);
+                    playerHealth -= damage;
+                    break;
+                case 9:
+                    damage = rand() % 55 + 35;
+                    if (choice == 2) {
+                        damage /= 2;
+                    }
+                    printf("The enemy dealt %d damage!\n", damage);
+                    playerHealth -= damage;
+                    break;
+                case 10:
+                    damage = rand() % 60 + 40;
+                    if (choice == 2) {
+                        damage /= 2;
+                    }
+                    printf("The enemy dealt %d damage!\n", damage);
+                    playerHealth -= damage;
+                    break;
             }
 
             printf("The enemy dealt %d damage!\n", damage);
@@ -61,7 +148,7 @@ void battle(int *playerHealth) {
 }
 
 int shop(int coins) {
-    system("clear");
+    printf("\033[2J\033[H");
     printf("Welcome to the shop!\n");
 
     printf("[1] Healing potion (10 coins)\n");
@@ -70,6 +157,7 @@ int shop(int coins) {
     printf("[4] Poison potion (10 coins)\n\n");
 
     int choice;
+    printf("> ");
     scanf("%d", &choice);
 
     if (choice < 1 || choice > 4) {
@@ -107,6 +195,7 @@ int main(void) {
 
     int playerLevel = 0;
     int playerHealth = 100;
+    int playerMana = 0;
     int coins = 50;
 
     int healthPotion = 0;
@@ -115,7 +204,7 @@ int main(void) {
     int poisonPotion = 0;
 
     while (1) {
-        printf("----------------------------------------------\n");
+        printf("\033[2J\033[H");
         printf("Player level: %d\n", playerLevel);
         printf("Player health: %d\n", playerHealth);
 
@@ -145,14 +234,56 @@ int main(void) {
                     break;
             }
         } else if (choice == 2) {
-            battle(&playerHealth);
+            battle(&playerHealth, &playerMana);
         } else if (choice == 3) {
+            printf("\033[2J\033[H");
             printf("\nInventory:\n");
             printf("Coins: %d\n", coins);
             printf("Health potion: %d\n", healthPotion);
             printf("Mana potion: %d\n", manaPotion);
             printf("Strength potion: %d\n", strengthPotion);
             printf("Poison potion: %d\n", poisonPotion);
+            printf("\n[1] Use potion\n[2] Exit\n> ");
+
+            int potionChoice;
+            scanf("%d", &potionChoice);
+
+            if (potionChoice == 1) {
+                printf("\nWhich potion would you like to use?\n");
+                printf("[1] Health potion\n[2] Mana potion\n[3] Strength potion\n[4] Poison potion\n> ");
+
+                int potionType;
+                scanf("%d", &potionType);
+
+                switch (potionType) {
+                    case 1:
+                        healthPotion--;
+                        printf("Health potion used.\n");
+                        playerHealth += 50;
+                        if (playerHealth > 100) {
+                            playerHealth = 100;
+                        }
+                        break;
+
+                    case 2:
+                        manaPotion--;
+                        printf("Mana potion used.\n");
+                        playerMana += 10;
+                        break;
+
+                    case 3:
+                        strengthPotion--;
+                        printf("Used only in battle.\n");
+                        break;
+
+                    case 4:
+                        poisonPotion--;
+                        printf("Used only in battle.\n");
+                        break;
+                        }
+            } else if (potionChoice == 2) {
+                continue;
+            }
         } else if (choice == 4) {
             break;
         }
